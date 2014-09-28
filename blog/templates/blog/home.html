@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Home
+{% endblock %}
+
+{% block content %}
+
+    <p>There are {{ x }} blog posts in your blog.</p>
+
+    {% for object in object_list %}
+        <div class="panel panel-default">
+            <div class="panel-heading"><a
+                    href="{% url "post" object.id %}"><b>{{ object.title }}</b></a>
+            </div>
+            <div class="panel-body">
+                {{ object.content|linebreaks }}
+            </div>
+        </div>
+    {% endfor %}
+
+{% endblock %}
