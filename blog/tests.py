@@ -22,3 +22,26 @@ class BlogTestCase(TestCase):
         resp = self.client.get(url)
         self.assertContains(resp, "Hello world")
 
+    def test_contents(self):
+
+        p = Post()
+        p.title = "Hello world"
+        p.content = "blah blah blah"
+        p.save()
+
+        p = Post()
+        p.title = "Daily Summary"
+        p.content = "blah blah blah"
+        p.save()
+
+        p = Post()
+        p.title = "Trip to USA"
+        p.content = "blah blah blah"
+        p.save()
+
+        url = reverse('contents')
+        resp = self.client.get(url)
+        self.assertContains(resp, "<li>Hello world</li>")
+        self.assertContains(resp, "<li>Hello world</li>")
+        self.assertContains(resp, "<li>Trip to USA</li>")
+
