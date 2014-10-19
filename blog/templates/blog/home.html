@@ -20,6 +20,9 @@
                 <hr/>
                 {{ object.published_at|timesince }} |
                 Priority: {{ object.get_priority_display }}
+                {% if object.tags.count %}
+                    | Tags: {{ object.tags.all|join:", " }}
+                {% endif %}
             </div>
         </div>
     {% endfor %}

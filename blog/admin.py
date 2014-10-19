@@ -25,3 +25,4 @@ class PostAdmin(admin.ModelAdmin):
 
 admin.site.register(models.Post, PostAdmin)
 admin.site.register(models.Category)
+admin.site.register(models.Tag)

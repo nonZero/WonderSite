@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.db import models
+from django.utils.translation import ugettext_lazy as _
 
 
 class Priority(object):
@@ -18,6 +19,15 @@ class Priority(object):
     )
 
 
+class Tag(models.Model):
+    slug = models.CharField(max_length=200, null=True, blank=True, unique=True)
+    title = models.CharField(max_length=200)
+
+    def __unicode__(self):
+        return self.title
+
+
+
 class Category(models.Model):
     slug = models.CharField(max_length=200, null=True, blank=True, unique=True)
     title = models.CharField(max_length=200)
@@ -29,9 +39,9 @@ class Category(models.Model):
 class Post(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True)
     is_published = models.BooleanField(default=False)
-    title = models.CharField(max_length=200)
-    content = models.TextField()
-    published_at = models.DateTimeField(auto_now_add=True)
+    title = models.CharField(_("Title"), max_length=200)
+    content = models.TextField(_("Content"))
+    published_at = models.DateTimeField(_("Published at"), auto_now_add=True)
     author = models.CharField(max_length=100, null=True, blank=True)
 
     priority = models.PositiveIntegerField(choices=Priority.choices,
@@ -40,5 +50,14 @@ class Post(models.Model):
     category = models.ForeignKey(Category, null=True, blank=True,
                                  related_name='posts')
 
+    tags = models.ManyToManyField(Tag, blank=True)
+
+    poster = models.ImageField(upload_to="posters", null=True, blank=True)
+
     def __unicode__(self):
         return self.title
+
+    class Meta:
+        verbose_name = _("Blog Post")
+        verbose_name_plural = _("Blog posts")
+
