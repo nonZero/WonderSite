@@ -2,11 +2,12 @@ import random
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse
+from django.http import HttpResponseNotAllowed
 
 from django.shortcuts import render, get_object_or_404, redirect
 from blog.forms import MyForm, PostForm
 
-from blog.models import Post, Category
+from blog.models import Post, Category, FavouritePost
 
 
 def home(request):
@@ -34,10 +35,30 @@ def contents(request):
 
 
 def single_post(request, pk):
+    post = get_object_or_404(Post, pk=int(pk))
     return render(request, "blog/post.html", {
-        # 'object': Post.objects.get(pk=int(pk)),
-        'object': get_object_or_404(Post, pk=int(pk)),
+        'object': post,
+        'starred': FavouritePost.objects.filter(post=post, user=request.user
+        ).exists()
     })
+
+@login_required
+def favourite(request, pk):
+    if request.method != "POST":
+        return HttpResponseNotAllowed()
+
+    post = get_object_or_404(Post, pk=int(pk))
+    FavouritePost.objects.get_or_create(post=post, user=request.user)
+    return redirect(post)
+
+@login_required
+def unfavourite(request, pk):
+    if request.method != "POST":
+        return HttpResponseNotAllowed()
+
+    post = get_object_or_404(Post, pk=int(pk))
+    FavouritePost.objects.filter(post=post, user=request.user).delete()
+    return redirect(post)
 
 
 @login_required

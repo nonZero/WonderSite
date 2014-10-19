@@ -9,6 +9,8 @@ urlpatterns = patterns('',
 
     url(r'^contents/$', 'blog.views.contents', name='contents'),
     url(r'^post/(\d+)/$', 'blog.views.single_post', name='post'),
+    url(r'^post/(\d+)/fav/$', 'blog.views.favourite', name='mark-fav'),
+    url(r'^post/(\d+)/unfav/$', 'blog.views.unfavourite', name='mark-unfav'),
     url(r'^category/(\w+)/$', 'blog.views.category', name='category'),
 
 

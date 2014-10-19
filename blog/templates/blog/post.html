@@ -6,10 +6,32 @@
 
 {% block content %}
 <h1>{{ object.title }}</h1>
-    <img src="{{ object.poster.url }}"/>
+    {% if object.poster %}
+        <img src="{{ object.poster.url }}"/>
+    {% endif %}
 <p>{{ object.content|linebreaks }}</p>
 
 <hr/>
+
+    {% if user.is_authenticated %}
+        {% if starred %}
+            <form method="POST" action="{% url "mark-unfav" object.id %}">
+                {% csrf_token %}
+                <button class="btn btn-default btn-lg">
+                  <span class="glyphicon glyphicon-star"></span> Remove Star
+                </button>
+            </form>
+        {% else %}
+            <form method="POST" action="{% url "mark-fav" object.id %}">
+                {% csrf_token %}
+                <button class="btn btn-default btn-lg">
+                  <span class="glyphicon glyphicon-star-empty"></span> Star
+                </button>
+            </form>
+        {% endif %}
+        <hr/>
+    {% endif %}
+
 
 
 {% endblock %}
