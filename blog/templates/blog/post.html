@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load staticfiles %}
 
 {% block title %}
 {{ object.title }}
@@ -14,24 +15,25 @@
 <hr/>
 
     {% if user.is_authenticated %}
-        {% if starred %}
-            <form method="POST" action="{% url "mark-unfav" object.id %}">
-                {% csrf_token %}
-                <button class="btn btn-default btn-lg">
-                  <span class="glyphicon glyphicon-star"></span> Remove Star
-                </button>
-            </form>
-        {% else %}
-            <form method="POST" action="{% url "mark-fav" object.id %}">
-                {% csrf_token %}
-                <button class="btn btn-default btn-lg">
-                  <span class="glyphicon glyphicon-star-empty"></span> Star
-                </button>
-            </form>
-        {% endif %}
+        <form class="unfav{% if starred %} hide{% endif %}" method="POST" action="{% url "mark-unfav" object.id %}">
+            {% csrf_token %}
+            <button class="btn btn-default btn-lg">
+              <span class="glyphicon glyphicon-star"></span> Remove Star
+            </button>
+        </form>
+        <form class="fav{% if not starred %} hide{% endif %}" method="POST" action="{% url "mark-fav" object.id %}">
+            {% csrf_token %}
+            <button class="btn btn-default btn-lg">
+              <span class="glyphicon glyphicon-star-empty"></span> Star
+            </button>
+        </form>
         <hr/>
     {% endif %}
 
 
 
+{% endblock %}
+
+{% block scripts %}
+    <script src="{% static "blog/post.js" %}"></script>
 {% endblock %}

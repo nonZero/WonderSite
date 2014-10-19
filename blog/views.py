@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseNotAllowed
+from django.http.response import JsonResponse
 
 from django.shortcuts import render, get_object_or_404, redirect
 from blog.forms import MyForm, PostForm
@@ -49,6 +50,8 @@ def favourite(request, pk):
 
     post = get_object_or_404(Post, pk=int(pk))
     FavouritePost.objects.get_or_create(post=post, user=request.user)
+    if request.is_ajax():
+        return JsonResponse({'fav': True})
     return redirect(post)
 
 @login_required
@@ -58,6 +61,8 @@ def unfavourite(request, pk):
 
     post = get_object_or_404(Post, pk=int(pk))
     FavouritePost.objects.filter(post=post, user=request.user).delete()
+    if request.is_ajax():
+        return JsonResponse({'fav': False})
     return redirect(post)
 
 
